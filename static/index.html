@@ -1,0 +1,41 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="relay.css">
+<script type="text/javascript">
+function onoff(){
+
+  currentvalue = document.getElementById('myonoffswitch').value;
+  console.log('Value is ' + currentvalue);
+  if(currentvalue == "Off"){
+    document.getElementById("myonoffswitch").value="On";
+  }else{
+     document.getElementById("myonoffswitch").value="Off";
+  }
+
+  ajaxJSONPost("/api/relay",{pin: 1,state : document.getElementById("myonoffswitch").value}, function (resp){console.log('Response is: ',resp)})
+}
+
+function ajaxJSONPost(url, jsondata, callback){
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url);
+    xhr.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
+    xhr.onreadystatechange = function () {
+	if (xhr.readyState == 4 && xhr.status == 200) {
+	    callback(xhr.responseText);
+	}
+    }
+    xhr.send(JSON.stringify(jsondata));
+}
+
+</script>
+</head>
+<body>
+<div class="onoffswitch">
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick="onoff();" value="Off">
+    <label class="onoffswitch-label" for="myonoffswitch">
+        <span class="onoffswitch-inner"></span>
+        <span class="onoffswitch-switch"></span>
+    </label>
+</div>
+</body>
+</html>
